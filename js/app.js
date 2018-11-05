@@ -1,5 +1,7 @@
 //show cart
 
+
+
 (function(){
 const cartInfo = document.getElementById("cart-info");
 const cart = document.getElementById("cart");
@@ -8,9 +10,10 @@ cartInfo.addEventListener("click", function(){
 	cart.classList.toggle("show-cart");
 	});
 
+
 })();
 
-
+let itemData = [];
 //ad items to the cart
 
 (function() {
@@ -31,7 +34,7 @@ cartInfo.addEventListener("click", function(){
 				let name = event.target.parentElement.parentElement.nextElementSibling.children[0].children[0].textContent;
 				let price = event.target.parentElement.parentElement.nextElementSibling.children[0].children[1].textContent;
 				item.name = name;
-
+				itemData.push(item.name);
 				let finalPrice = price.slice(1).trim();
 
 				item.price = finalPrice;
@@ -53,7 +56,7 @@ cartInfo.addEventListener("click", function(){
 				id="item-img" alt"">
 				<div class="item-text">
 
-				<p id="cart-item-title" class="font-weight-bold mb-0">${item.name}</p>
+				<p id="cart-item-title" class="cart-item-name" class="font-weight-bold mb-0">${item.name}</p>
 				<span>$</span>
 				<span id ="cart-item-price" class="cart-item-price"
 				class="mb-0">${item.price}</span>
@@ -66,13 +69,13 @@ cartInfo.addEventListener("click", function(){
 
 				//select cart
 				const cart = document.getElementById("cart");
-				console.log(item);
+				console.log(item.name);
 				const total = document.querySelector(".cart-total-container");
 
 				cart.insertBefore(cartItem, total);
 				alert("item added to the cart");
 				showTotals();
-				handleItem(item, cardItem);
+				handleItem(item, cartItem, cart);
 
 			//remove cart
 				
@@ -112,12 +115,55 @@ cartInfo.addEventListener("click", function(){
 	//<a href="#" id="cart-item-remove" class="cart-item-remove">
 	// <i class="fas fa-trash">
 
-	function handleItem(item, cardItem){
-		
-		// const cartitemremove = document.querySelectorAll("cart-item-remove");
-		
-			//console.log(cardItem);
-		
+	function handleItem(item){
+		const cartlist = document.querySelector(".cart");
+		const carts = cartlist.querySelectorAll(".cart-item");
+		carts.forEach(function(cartItem){
+
+
+			if(cartItem.querySelector(".cart-item-name").textContent === item.name){
+
+			cartItem.querySelector(".cart-item-remove").addEventListener('click',function () {
+				// console.log("Hast aqui Funciona bien");
+
+				cartlist.removeChild(cartItem);
+				itemData=itemData.filter(function(cartItem){
+					return cartItem !== item.name;
+
+					const total = [];
+					 const items = document.querySelectorAll(".cart-item-price");
+
+					 items.forEach(function(item){
+					 	total.pop(parseFloat(item.textContent));
+					 });
+					 // console.log(total);
+
+					 const totalMoney = total.reduce(function(total, item) {
+					 	total -=item;
+					 	return total;
+					 }, 0);
+					 const finalMoney = totalMoney.toFixed(2);
+					 
+
+					 document.getElementById("cart-total").textContent = finalMoney;
+					 document.querySelector(".item-total").textContent = finalMoney;
+					 document.getElementById("item-count").textContent = total.length;
+
+
+
+
+
+
+
+
+				});
+
+
+			})
+				
+			}
+			
+		})
 	}
 
 
